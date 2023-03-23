@@ -7,6 +7,7 @@ const mongoClient = require("mongodb").MongoClient;
 const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 
 let db;
 mongoClient.connect(
@@ -28,6 +29,16 @@ app.get("/", (req, res) => {
 app.get("/write", (req, res) => {
   console.log("👀 Page Access Detected : write");
   res.sendFile(__dirname + "/write.html");
+});
+app.get("/list", (req, res) => {
+  db.collection("post")
+    .find()
+    .toArray((err, dbPosts) => {
+      if (err) {
+        return console.log("/list db 에러 발생");
+      }
+      res.render("list.ejs", { posts: dbPosts });
+    });
 });
 
 // post
