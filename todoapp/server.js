@@ -70,3 +70,15 @@ app.post("/add", (req, res) => {
     res.send("에러 발생");
   }
 });
+
+// delete
+app.delete("/delete", (req, res) => {
+  try {
+    const { _id } = req.body;
+    db.collection("post").deleteOne({ _id: Number(_id) }, () => {
+      res.status(200).send({ message: "성공적으로 삭제했습니다" });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});

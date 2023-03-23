@@ -49,23 +49,39 @@
       </div>
     </nav>
 
-    <h2>✅ 할 일 리스트</h2>
-    <ul>
+    <h2 class="list-group m-3">할 일 리스트</h2>
+    <a class="m-3" href="/write">할 일 작성하러 가기</a>
+    <ul class="m-3">
       <% for (let i = 0; i < posts.length; i++) { %>
-      <li>
-        <div>할 일 : <%=posts[i].title%></div>
-        <p>제한 : <%=posts[i].date%></p>
+      <li class="list-group-item">
+        <div class="p-1">
+          <small>글 번호 : <%= posts[i]._id%></small>
+          <h5 class="mt-2 mb-1"><%= posts[i].title%></h5>
+          <p>마감기한 : <%= posts[i].date%></p>
+          <button data-_id="<%= posts[i]._id%>" class="delete">삭제</button>
+        </div>
       </li>
       <% } %>
     </ul>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+      $(".delete").click((e) => {
+        const { _id } = e.target.dataset;
+        $.ajax({
+          method: "DELETE",
+          url: "/delete",
+          data: { _id },
+        })
+          .done((res) => {
+            e.target.closest(".list-group-item").remove();
+          })
+          .fail(() => alert("삭제 실패함"));
+      });
+    </script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
