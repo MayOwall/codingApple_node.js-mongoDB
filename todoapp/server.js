@@ -43,18 +43,30 @@ app.get("/list", (req, res) => {
 
 // post
 app.post("/add", (req, res) => {
-  const { title, date } = req.body;
-  if (!!title && !!date) {
-    const nextData = {
-      title,
-      date,
-    };
-    db.collection("post").insertOne(nextData, () => {
-      console.log("DB:Post 저장 완료");
+  try {
+    const { title, date } = req.body;
+    db.collection("counter").findOne({ name: "게시물갯수" }, (err, res) => {
+      if (err) return console.log(err);
+      const { postCount } = res;
+      if (!!title && !!date) {
+        const nextData = {
+          _id: postCount + 1,
+          title,
+          date,
+        };
+        db.collection("post").insertOne(nextData, () => {
+          console.log("DB:Post 저장 완료");
+          db.collection("counter").updateOne(
+            { name: "게시물갯수" },
+            { $inc: { postCount: 1 } },
+            (err, res) => err && console.log(err)
+          );
+        });
+      }
     });
     res.send("전송 완료");
-  } else {
-    console.log("/add post의 title 혹은 date값이 비어있습니다");
+  } catch (e) {
+    console.log(e);
     res.send("에러 발생");
   }
 });
