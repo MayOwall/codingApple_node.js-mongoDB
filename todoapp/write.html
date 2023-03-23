@@ -7,7 +7,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -20,7 +19,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Navbar</a>
+      <a class="navbar-brand" href="#">Navbar</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -35,12 +34,12 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="/"
+            <a class="nav-link" href="#"
               >Home <span class="sr-only">(current)</span></a
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/write">Write</a>
+            <a class="nav-link" href="#">Write</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Temp</a>
@@ -48,17 +47,21 @@
         </ul>
       </div>
     </nav>
-
-    <div class="jumbotron">
-      <h1 class="display-4">Hello, There! 🍎</h1>
-      <p class="lead">
-        이 사이트는 코딩애플의 강의를 들으면서 제작된 페이지입니다.<br />
-        페이지 생성에 사용된 기술은 아래와 같습니다.<br />
-      </p>
-      <hr class="my-4" />
-      <p>Node.js, Express, MongoDB</p>
-      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    <h4 class="container mt-4"><strong>글 작성페이지</strong></h4>
+    <div class="container mt-3">
+      <form action="/add" method="POST">
+        <div class="form-group">
+          <label>오늘의 할일</label>
+          <input type="text" class="form-control" name="title" />
+        </div>
+        <div class="form-group">
+          <label>날짜</label>
+          <input type="text" class="form-control" name="date" />
+        </div>
+        <button type="submit" class="btn btn-outline-secondary">Submit</button>
+      </form>
     </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
