@@ -18,6 +18,7 @@
 
     <title>Hello, world!</title>
   </head>
+
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="/">Navbar</a>
@@ -54,39 +55,27 @@
       </div>
     </nav>
 
-    <h2 class="list-group m-3">할 일 리스트</h2>
-    <a class="m-3" href="/write">할 일 작성하러 가기</a>
-    <ul class="m-3">
-      <% for (let i = 0; i < posts.length; i++) { %>
-      <li class="list-group-item" data-_id="<%=posts[i]._id%>">
-        <div class="p-1">
-          <small>글 번호 : <%= posts[i]._id%></small>
-          <h5 class="mt-2 mb-1" onclick="() => console.log('hello')">
-            <%= posts[i].title%>
-          </h5>
-          <p>마감기한 : <%= posts[i].date%></p>
-          <button data-_id="<%= posts[i]._id%>" class="delete">삭제</button>
-        </div>
-      </li>
-      <% } %>
-    </ul>
+    <h2 class="list-group m-3">상세페이지</h2>
 
+    <div class="card" style="width: 300px">
+      <img
+        src="https://pbs.twimg.com/media/Fbkz1m4agAIZwY8.jpg"
+        class="card-img-top"
+        alt="이미지"
+      />
+      <div class="card-body">
+        <h5 class="card-title"><%=data._id%></h5>
+        <p class="card-text"><%=data.date%></p>
+        <p class="card-text">
+          <small class="text-muted">포스트 번호 : <%=data._id%></small>
+        </p>
+      </div>
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-      const postClick = (e) => {
-        console.log("hello");
-        const { _id } = e.target.dataset;
-        location.href(`/detail/${_id}`);
-      };
-      $(".list-group-item").click((e) => {
-        const { _id } = e.target.closest(".list-group-item").dataset;
-        location.href = `/detail/${_id}`;
-      });
-
       $(".delete").click((e) => {
-        e.stopPropagation();
         const { _id } = e.target.dataset;
         $.ajax({
           method: "DELETE",

@@ -40,6 +40,12 @@ app.get("/list", (req, res) => {
       res.render("list.ejs", { posts: dbPosts });
     });
 });
+app.get("/detail/:id", (req, res) => {
+  const { id } = req.params;
+  db.collection("post").findOne({ _id: Number(id) }, (err, data) => {
+    res.render("detail.ejs", { data });
+  });
+});
 
 // post
 app.post("/add", (req, res) => {
@@ -59,12 +65,12 @@ app.post("/add", (req, res) => {
           db.collection("counter").updateOne(
             { name: "게시물갯수" },
             { $inc: { postCount: 1 } },
-            (err, res) => err && console.log(err)
+            (err, _) => err && console.log(err)
           );
         });
       }
     });
-    res.send("전송 완료");
+    res.sendFile(__dirname + "/index.html");
   } catch (e) {
     console.log(e);
     res.send("에러 발생");
