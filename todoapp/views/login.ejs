@@ -18,45 +18,19 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Navbar</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/list">List </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/write">Write</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <h4 class="container mt-4"><strong>글 작성페이지</strong></h4>
+    <%- include('./nav.ejs') %>
+    <h4 class="container mt-4"><strong>로그인 😃</strong></h4>
     <div class="container mt-3">
-      <form action="/add" method="POST">
+      <form action="/login" method="POST">
         <div class="form-group">
-          <label>오늘의 할일</label>
-          <input type="text" class="form-control" name="title" />
+          <label>아이디</label>
+          <input type="text" class="form-control" name="id" />
         </div>
         <div class="form-group">
-          <label>날짜</label>
-          <input type="text" class="form-control" name="date" />
+          <label>비밀번호</label>
+          <input type="password" class="form-control" name="password" />
         </div>
-        <button type="submit" class="btn btn-outline-secondary">Submit</button>
+        <button type="button" class="btn btn-primary">Login</button>
       </form>
     </div>
 

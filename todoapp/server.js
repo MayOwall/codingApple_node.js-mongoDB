@@ -2,11 +2,22 @@
 require("dotenv/config");
 const { MONGODB_ID, MONGODB_PASSWORD } = process.env;
 
+// session libraries
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const session = require("express-session");
+
 // server
 const mongoClient = require("mongodb").MongoClient;
 const express = require("express");
+
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({ secret: "비밀 코드", resave: true, saveUninitialized: false })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.set("view engine", "ejs");
 
 let db;
@@ -21,14 +32,14 @@ mongoClient.connect(
   }
 );
 
-// get
+// GET
 // 메인페이지
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.render("index.ejs");
 });
 // 할 일 작성 페이지
 app.get("/write", (req, res) => {
-  res.sendFile(__dirname + "/write.html");
+  res.render("write.ejs");
 });
 // 할 일 리스트 페이지
 app.get("/list", (req, res) => {
@@ -67,8 +78,12 @@ app.get("/edit/:id", (req, res) => {
     console.log("GET_edit", e);
   }
 });
+// 로그인 페이지
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
 
-// post
+// POST
 // 할 일 추가
 app.post("/add", (req, resTop) => {
   try {
@@ -109,8 +124,43 @@ app.post("/edit", (req, res) => {
   );
   res.end();
 });
+app.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/fail" }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
 
-// delete
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "id",
+      passwordField: "pw",
+      session: true,
+      passReqToCallback: false,
+    },
+    function (입력한아이디, 입력한비번, done) {
+      //console.log(입력한아이디, 입력한비번);
+      db.collection("login").findOne(
+        { id: 입력한아이디 },
+        function (에러, 결과) {
+          if (에러) return done(에러);
+
+          if (!결과)
+            return done(null, false, { message: "존재하지않는 아이디요" });
+          if (입력한비번 == 결과.pw) {
+            return done(null, 결과);
+          } else {
+            return done(null, false, { message: "비번틀렸어요" });
+          }
+        }
+      );
+    }
+  )
+);
+
+// DELETE
 // 할 일 삭제
 app.delete("/delete", (req, res) => {
   try {
