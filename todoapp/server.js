@@ -55,6 +55,18 @@ app.get("/detail/:id", (req, res) => {
     res.send("GET_detail 에러 발생");
   }
 });
+// 할 일 수정 페이지
+app.get("/edit/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    db.collection("post").findOne({ _id: Number(id) }, (err, data) => {
+      if (err) res.send("에러 발생");
+      res.render("edit.ejs", { data });
+    });
+  } catch (e) {
+    console.log("GET_edit", e);
+  }
+});
 
 // post
 // 할 일 추가
@@ -84,6 +96,18 @@ app.post("/add", (req, resTop) => {
     console.log("POST_add", e);
     res.send("POST_add, 에러 발생");
   }
+});
+// 할 일 수정
+app.post("/edit", (req, res) => {
+  const { _id, title, date } = req.body;
+  db.collection("post").updateOne(
+    { _id: Number(_id) },
+    { $set: { title: title, date: date } },
+    (err, _) => {
+      err ? console.log("수정 실패") : console.log("수정 성공");
+    }
+  );
+  res.end();
 });
 
 // delete
