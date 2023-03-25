@@ -22,37 +22,46 @@ mongoClient.connect(
 );
 
 // get
+// 메인페이지
 app.get("/", (req, res) => {
-  console.log("👀 Page Access Detected : main");
   res.sendFile(__dirname + "/index.html");
 });
+// 할 일 작성 페이지
 app.get("/write", (req, res) => {
-  console.log("👀 Page Access Detected : write");
   res.sendFile(__dirname + "/write.html");
 });
+// 할 일 리스트 페이지
 app.get("/list", (req, res) => {
-  db.collection("post")
-    .find()
-    .toArray((err, dbPosts) => {
-      if (err) {
-        return console.log("/list db 에러 발생");
-      }
-      res.render("list.ejs", { posts: dbPosts });
-    });
+  try {
+    db.collection("post")
+      .find()
+      .toArray((err, dbPosts) => {
+        res.render("list.ejs", { posts: dbPosts });
+      });
+  } catch (e) {
+    console.log("GET_list", e);
+    res.send("에러 발생");
+  }
 });
+// 할 일 상세 페이지
 app.get("/detail/:id", (req, res) => {
-  const { id } = req.params;
-  db.collection("post").findOne({ _id: Number(id) }, (err, data) => {
-    res.render("detail.ejs", { data });
-  });
+  try {
+    const { id } = req.params;
+    db.collection("post").findOne({ _id: Number(id) }, (err, data) => {
+      res.render("detail.ejs", { data });
+    });
+  } catch (e) {
+    console.log("GET_detail", e);
+    res.send("GET_detail 에러 발생");
+  }
 });
 
 // post
-app.post("/add", (req, res) => {
+// 할 일 추가
+app.post("/add", (req, resTop) => {
   try {
     const { title, date } = req.body;
     db.collection("counter").findOne({ name: "게시물갯수" }, (err, res) => {
-      if (err) return console.log(err);
       const { postCount } = res;
       if (!!title && !!date) {
         const nextData = {
@@ -61,23 +70,24 @@ app.post("/add", (req, res) => {
           date,
         };
         db.collection("post").insertOne(nextData, () => {
-          console.log("DB:Post 저장 완료");
           db.collection("counter").updateOne(
             { name: "게시물갯수" },
             { $inc: { postCount: 1 } },
-            (err, _) => err && console.log(err)
+            (err, res) => {
+              resTop.render("detail.ejs", { data: nextData });
+            }
           );
         });
       }
     });
-    res.sendFile(__dirname + "/index.html");
   } catch (e) {
-    console.log(e);
-    res.send("에러 발생");
+    console.log("POST_add", e);
+    res.send("POST_add, 에러 발생");
   }
 });
 
 // delete
+// 할 일 삭제
 app.delete("/delete", (req, res) => {
   try {
     const { _id } = req.body;

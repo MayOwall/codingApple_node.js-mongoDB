@@ -35,41 +35,67 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="/."
-              >Home <span class="sr-only">(current)</span></a
-            >
+            <a class="nav-link" href="/">Home</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="/list"
-              >List <span class="sr-only">(current)</span></a
-            >
+            <a class="nav-link" href="/list">List </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/write">Write</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Temp</a>
           </li>
         </ul>
       </div>
     </nav>
 
-    <h2 class="list-group m-3">할 일 리스트</h2>
-    <a class="m-3" href="/write">할 일 작성하러 가기</a>
-    <ul class="m-3">
-      <% for (let i = 0; i < posts.length; i++) { %>
-      <li class="list-group-item" data-_id="<%=posts[i]._id%>">
-        <div class="p-1">
-          <small>글 번호 : <%= posts[i]._id%></small>
-          <h5 class="mt-2 mb-1" onclick="() => console.log('hello')">
-            <%= posts[i].title%>
-          </h5>
-          <p>마감기한 : <%= posts[i].date%></p>
-          <button data-_id="<%= posts[i]._id%>" class="delete">삭제</button>
-        </div>
-      </li>
-      <% } %>
-    </ul>
+    <h2 class="list-group m-3 text-center">MongoDB에서 불러온 할 일 리스트</h2>
+    <a href="/write">
+      <div class="text-center m-3">👉 할 일 작성하러 가기 👈</div>
+    </a>
+    <div
+      style="
+        display: flex;
+        height: calc(100vh - 200px);
+        overflow: auto;
+        justify-content: center;
+      "
+    >
+      <ul
+        style="
+          width: 300px;
+          margin-bottom: 30px;
+          padding-left: 0;
+          list-style: none;
+        "
+      >
+        <% for (let i = 0; i < posts.length; i++) { %>
+        <li
+          class="list-group-item"
+          style="
+            border: 1px solid lightgray;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+          "
+          data-_id="<%=posts[i]._id%>"
+        >
+          <div class="p-1">
+            <small>글 번호 : <%= posts[i]._id%></small>
+            <h5 class="mt-2 mb-1" onclick="() => console.log('hello')">
+              <%= posts[i].title%>
+            </h5>
+            <p>마감기한 : <%= posts[i].date%></p>
+            <button
+              data-_id="<%= posts[i]._id%>"
+              type="button"
+              class="delete btn btn-danger"
+            >
+              삭제
+            </button>
+          </div>
+        </li>
+        <% } %>
+      </ul>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
